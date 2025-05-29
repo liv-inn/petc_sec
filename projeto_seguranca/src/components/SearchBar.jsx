@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { FaSearch } from 'react-icons/fa';
+import { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 
 function SearchBar() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <div className="relative w-250 ml-24 mt-8 ">
