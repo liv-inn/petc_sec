@@ -3,7 +3,7 @@
 function AcessCard({title, subtitle, icon, description, link}){
 
     return(
-        <div className="h-80 w-80 bg-white rounded-2xl
+        <div className="h-80 w-80 bg-white rounded-sm
          border-[#BBF7D0] border shadow 
          hover:shadow-lg transition
          flex flex-col items-center ">

@@ -1,7 +1,7 @@
-function Logo() {
+function Logo({ className = "" }) {
 
     return(
-        <h1 className="text-5xl font-bold text-gray-800">🐾 PetCare </h1>
+        <h1 className={`font-bold text-3xl ${className}`}>🐾 PetCare </h1>
     )
 }
 

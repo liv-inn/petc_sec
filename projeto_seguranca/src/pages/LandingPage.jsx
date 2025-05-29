@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 function LandingPage(){
     return(
         <div className='flex justify-center items-center h-screen flex-col'>
-            <Logo /> 
+            <Logo  className="text-5xl font-bold text-gray-800"/> 
             <p className=' text-xl text-gray-600 mt-4 h-14 w-160 text-center'>Sistema completo de gestão veterinária para cuidar dos seus pets com carinho e profissionalismo</p>
 
             <div className='flex justify-center items-center gap-10 mt-10'>
