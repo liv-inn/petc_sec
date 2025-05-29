@@ -13,7 +13,7 @@ function LandingPage(){
                 <AcessCard 
                 title="Login"
                 subtitle="Acesse sua conta já existente"
-                icon={<FaUserDoctor className="text-6xl text-white" />}
+                icon={<FaUserDoctor className="text-5xl text-white" />}
                 description="Entre com suas credenciais para gerenciar seus pets."
                 link={
                     <Link to="/login" className=" ">
@@ -25,7 +25,7 @@ function LandingPage(){
                 <AcessCard 
                 title="Criar Conta"
                 subtitle="Cadastre-se no sistema"
-                icon={<FaUserPlus className="text-6xl text-white" />}
+                icon={<FaUserPlus className="text-5xl text-white" />}
                 description="Crie sua conta para começar a usar o sistema e gerencie seus pets."
                                 link={
                     <Link to="/cadastro" className=" ">

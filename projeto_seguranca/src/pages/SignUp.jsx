@@ -22,7 +22,7 @@ function SignUp(){
 
 
         <form onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-4 w-100 mt-10 ">
+            <div className="flex flex-col gap-4 w-100 mt-6 ">
             <label className="text-gray-600" htmlFor="name">Nome</label>
             <div className="flex h-12 items-center border border-gray-200 rounded-md px-2 py-1 gap-2">
             <FaUser className="ml-2 text-gray-400"/>
