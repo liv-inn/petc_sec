@@ -3,11 +3,13 @@ import Logo from "../components/Logo.jsx";
 import { FaCalendar, FaDog, FaPlus, FaUser } from "react-icons/fa6";
 import SearchBar from "../components/searchBar.jsx";
 import AnimalCard from "../components/AnimalCard.jsx";
+import AddDataModal from "../components/AddDataModal.jsx";
+import EditDataModal from "../components/EditDataModal.jsx";
+import { useState } from "react";
 
 function Home() {
-  const handleClick = () => {
-    console.log("Botão Cadastrar clicado");
-  };
+  const [isAddDataModalOpen, setAddDataModalOpen] = useState(false);
+  const [isEditDataModalOpen, setEditDataModalOpen] = useState(false);
 
   return (
     <div className="home">
@@ -37,45 +39,57 @@ function Home() {
           <SearchBar />
         </div>
         <button
-          onClick={handleClick}
+          onClick={() => setAddDataModalOpen(true)}
           className="w-48 h-12 bg-blue-700 text-white rounded-sm flex gap-2 justify-center items-center mt-8 mr-24 hover:bg-blue-800 transition-colors duration-300 shadow-md"
         >
           <FaPlus /> Cadastrar
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-28 justify-center items-center">
+      <div className="flex flex-col sm:flex-row gap-22 justify-center items-center">
         <AnimalCard
-        name="Amora"
-        species="Cachorro"
-        breed="Vira-Lata"
-        age="4 anos"
-        owner="Alice Neves"
-        cel="(13) 991123456"
-        appointmentDate="01/10/2024"
+          name="Amora"
+          species="Cachorro"
+          breed="Vira-Lata"
+          age="4 anos"
+          owner="Alice Neves"
+          cel="(13) 991123456"
+          appointmentDate="01/10/2024"
+          onEditClick={() => setEditDataModalOpen(true)}
         />
 
-       <AnimalCard
-        name="Amora"
-        species="Cachorro"
-        breed="Vira-Lata"
-        age="4 anos"
-        owner="Alice Neves"
-        cel="(13) 991123456"
-        appointmentDate="01/10/2024"
+        <AnimalCard
+          name="Amora"
+          species="Cachorro"
+          breed="Vira-Lata"
+          age="4 anos"
+          owner="Alice Neves"
+          cel="(13) 991123456"
+          appointmentDate="01/10/2024"
+          onEditClick={() => setEditDataModalOpen(true)}
         />
 
-      <AnimalCard
-        name="Amora"
-        species="Cachorro"
-        breed="Vira-Lata"
-        age="4 anos"
-        owner="Alice Neves"
-        cel="(13) 991123456"
-        appointmentDate="01/10/2024"
+        <AnimalCard
+          name="Amora"
+          species="Cachorro"
+          breed="Vira-Lata"
+          age="4 anos"
+          owner="Alice Neves"
+          cel="(13) 991123456"
+          appointmentDate="01/10/2024"
+          onEditClick={() => setEditDataModalOpen(true)}
         />
-        
       </div>
+
+      <AddDataModal
+        isOpen={isAddDataModalOpen}
+        onClose={() => setAddDataModalOpen(false)}
+      />
+
+      <EditDataModal
+        isOpen={isEditDataModalOpen}
+        onClose={() => setEditDataModalOpen(false)}
+      />
     </div>
   );
 }
