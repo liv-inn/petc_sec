@@ -98,6 +98,16 @@ function Modal({ isOpen, onClose, children, portalId = 'modal-root', ariaLabel =
         </div>,
         el
     );
-}
+};
+
+
+const ModalHeader = ({ children }) => (
+    <div className="mb-4">
+        {children}
+    </div>
+);
+
+
+Modal.Header = ModalHeader;
 
 export default Modal;
