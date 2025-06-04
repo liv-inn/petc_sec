@@ -1,104 +1,87 @@
 package com.prjSecurity.controller;
 
-import com.prjSecurity.model.Pet;
-import com.prjSecurity.service.ServicePet;
-
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.prjSecurity.model.Dono;
+import com.prjSecurity.model.Pet;
+import com.prjSecurity.repository.RepoDono;
+import com.prjSecurity.service.ServicePet;
+
 @RestController
 @RequestMapping("/pets")
-// Restrict CORS to trusted origins only
-@CrossOrigin(origins = {"http://localhost:3000", "https://yourdomain.com"})
+@CrossOrigin(origins = "*")
 public class PetController {
+
     @Autowired
     private ServicePet petService;
-    
+
+    @Autowired
+    private RepoDono donoRepository;
+
     @GetMapping
     public ResponseEntity<List<Pet>> getAllPets() {
-        List<Pet> pets = petService.findAll();
-        return ResponseEntity.ok(pets);
+        return ResponseEntity.ok(petService.findAll());
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<Pet> getPetById(@PathVariable Long id) {
         Optional<Pet> pet = petService.findById(id);
         return pet.map(ResponseEntity::ok)
-                  .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    
+
     @PostMapping
-    public ResponseEntity<?> createPet(@Valid @RequestBody Pet pet) {
-        try {
-            Pet novoPet = petService.save(pet);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novoPet);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+    public ResponseEntity<?> createPet(@RequestBody Pet pet) {
+        if (pet.getDono() == null || pet.getDono().getId() == null) {
+            return ResponseEntity.badRequest().body("Dono ID must be provided");
         }
+        Optional<Dono> dono = donoRepository.findById(pet.getDono().getId());
+        if (!dono.isPresent()) {
+            return ResponseEntity.badRequest().body("Dono with ID " + pet.getDono().getId() + " does not exist");
+        }
+        pet.setDono(dono.get());
+        Pet savedPet = petService.save(pet);
+        return ResponseEntity.ok(savedPet);
     }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePet(@PathVariable Long id, @Valid @RequestBody Pet pet) {
+    public ResponseEntity<?> updatePet(@PathVariable Long id, @RequestBody Pet pet) {
+        if (pet.getDono() == null || pet.getDono().getId() == null) {
+            return ResponseEntity.badRequest().body("Dono ID must be provided");
+        }
+        Optional<Dono> dono = donoRepository.findById(pet.getDono().getId());
+        if (!dono.isPresent()) {
+            return ResponseEntity.badRequest().body("Dono with ID " + pet.getDono().getId() + " does not exist");
+        }
+        pet.setDono(dono.get());
         try {
-            Pet petAtualizado = petService.update(id, pet);
-            return ResponseEntity.ok(petAtualizado);
+            Pet updatedPet = petService.update(id, pet);
+            return ResponseEntity.ok(updatedPet);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+            return ResponseEntity.notFound().build();
         }
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePet(@PathVariable Long id) {
         try {
             petService.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+            return ResponseEntity.notFound().build();
         }
-    }
-    
-    @GetMapping("/buscar")
-    public ResponseEntity<List<Pet>> buscarPets(@RequestParam(required = false) String nome,
-                                               @RequestParam(required = false) String especie) {
-        List<Pet> pets;
-        
-        if (nome != null && !nome.isEmpty()) {
-            pets = petService.findByNome(nome);
-        } else if (especie != null && !especie.isEmpty()) {
-            pets = petService.findByEspecie(especie);
-        } else {
-            pets = petService.findAll();
-        }
-        
-        return ResponseEntity.ok(pets);
-    }
-    
-    @GetMapping("/dono/{donoId}")
-    public ResponseEntity<List<Pet>> getPetsByDono(@PathVariable Long donoId) {
-        List<Pet> pets = petService.findByDonoId(donoId);
-        return ResponseEntity.ok(pets);
-    }
-    
-    @GetMapping("/count")
-    public ResponseEntity<Long> countPets() {
-        Long total = petService.countTotal();
-        return ResponseEntity.ok(total);
-    }
-    
-    @GetMapping("/estatisticas/especies")
-    public ResponseEntity<List<Object[]>> getEstatisticasPorEspecie() {
-        List<Object[]> estatisticas = petService.countByEspecie();
-        return ResponseEntity.ok(estatisticas);
     }
 }

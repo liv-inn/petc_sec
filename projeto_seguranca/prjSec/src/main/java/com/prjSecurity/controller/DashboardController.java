@@ -26,12 +26,10 @@ public class DashboardController {
     public ResponseEntity<Map<String, Object>> getEstatisticas() {
         Map<String, Object> estatisticas = new HashMap<>();
         
-        // Totais principais
         estatisticas.put("totalPets", petService.countTotal());
         estatisticas.put("totalDonos", donoService.countTotal());
         estatisticas.put("totalConsultas", consultaService.countTotal());
         
-        // Estatísticas por espécie
         estatisticas.put("petsPorEspecie", petService.countByEspecie());
         
         return ResponseEntity.ok(estatisticas);
@@ -46,5 +44,10 @@ public class DashboardController {
         resumo.put("consultas", consultaService.countTotal());
         
         return ResponseEntity.ok(resumo);
+    }
+    
+    @GetMapping("")
+    public ResponseEntity<String> rootDashboard() {
+        return ResponseEntity.ok("Dashboard API root endpoint. Use /estatisticas or /resumo.");
     }
 }
